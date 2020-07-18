@@ -18,5 +18,5 @@ jobs:
     - name: "Gradle build"
       uses: "eskatos/gradle-command-action@v1"
       with:
-        gradle-version: "6.5.0"
+        gradle-version: "6.5"
         arguments: "build"
