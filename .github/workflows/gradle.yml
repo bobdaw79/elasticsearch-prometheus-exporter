@@ -56,7 +56,7 @@ jobs:
 
   release:
     needs: "test"
-    if: "github.baseref == 'master'"
+    if: "github.base_ref == 'master'"
     runs-on: "ubuntu-latest"
     steps:
     - name: "Checkout repository"
