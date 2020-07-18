@@ -2,13 +2,11 @@ on:
   push:
     branches:
       - "master"
-      - "2.x"
       - "5.x"
       - "6.x"
   pull_request:
     branches:
       - "master"
-      - "2.x"
       - "5.x"
       - "6.x"
 jobs:
@@ -26,17 +24,30 @@ jobs:
       with:
         gradle-version: "6.5"
         arguments: "--build-cache assemble"
-
+    - name: "Put elements in cache"
+      uses: actions/cache@v2
+      with:
+        path: |
+          build
+          .gradle
+        key: "${{ github.run_id }}"
   test:
     runs-on: ubuntu-latest
     steps:
     - name: "Checkout repository"
       uses: "actions/checkout@v2"
+    - name: "Restore cache"
+      uses: actions/cache@v2
+      with:
+        path: |
+          build
+          .gradle
+        key: "${{ github.run_id }}"
     - name: "Set up JDK"
       uses: "actions/setup-java@v1"
       with:
         java-version: 14
-    - name: "Gradle build"
+    - name: "Gradle check"
       uses: "eskatos/gradle-command-action@v1"
       with:
         gradle-version: "6.5"
