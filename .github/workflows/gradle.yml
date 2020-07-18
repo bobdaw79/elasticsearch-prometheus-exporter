@@ -44,8 +44,6 @@ jobs:
           build
           .gradle
         key: "${{ github.run_id }}"
-    - name: "test"
-      run: "ls -al"
     - name: "Set up JDK"
       uses: "actions/setup-java@v1"
       with:
@@ -55,3 +53,27 @@ jobs:
       with:
         gradle-version: "6.5"
         arguments: "check"
+
+  release:
+    needs: "test"
+    if: "github.baseref == 'master'"
+    runs-on: "ubuntu-latest"
+    steps:
+    - name: "Checkout repository"
+      uses: "actions/checkout@v2"
+    - name: "Restore cache"
+      uses: actions/cache@v2
+      with:
+        path: |
+          build
+          .gradle
+        key: "${{ github.run_id }}"
+    - name: "Set up JDK"
+      uses: "actions/setup-java@v1"
+      with:
+        java-version: 14
+    - name: "Gradle release"
+      uses: "eskatos/gradle-command-action@v1"
+      with:
+        gradle-version: "6.5"
+        arguments: "release"
