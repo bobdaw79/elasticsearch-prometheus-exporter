@@ -15,3 +15,8 @@ jobs:
       uses: "actions/setup-java@v1"
       with:
         java-version: 14
+    - name: "Gradle build"
+      uses: "eskatos/gradle-command-action@v1"
+      with:
+        gradle-version: "6.5.0"
+        arguments: "build"
