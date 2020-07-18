@@ -2,9 +2,15 @@ on:
   push:
     branches:
       - "master"
+      - "2.x"
+      - "5.x"
+      - "6.x"
   pull_request:
     branches:
       - "master"
+      - "2.x"
+      - "5.x"
+      - "6.x"
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -19,4 +25,19 @@ jobs:
       uses: "eskatos/gradle-command-action@v1"
       with:
         gradle-version: "6.5"
-        arguments: "build"
+        arguments: "--build-cache assemble"
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - name: "Checkout repository"
+      uses: "actions/checkout@v2"
+    - name: "Set up JDK"
+      uses: "actions/setup-java@v1"
+      with:
+        java-version: 14
+    - name: "Gradle build"
+      uses: "eskatos/gradle-command-action@v1"
+      with:
+        gradle-version: "6.5"
+        arguments: "check"
