@@ -1,3 +1,5 @@
+name: "ci"
+
 on:
   push:
     branches:
@@ -9,73 +11,30 @@ on:
       - "master"
       - "5.x"
       - "6.x"
+
 jobs:
   build:
     runs-on: "ubuntu-latest"
     steps:
-    - name: Test
-      run: "echo ${{ github.ref }}"
-    - name: "Checkout repository"
-      uses: "actions/checkout@v2"
-    - name: "Set up JDK"
-      uses: "actions/setup-java@v1"
-      with:
-        java-version: 14
-    - name: "Gradle build"
-      uses: "eskatos/gradle-command-action@v1"
-      with:
-        gradle-version: "6.5"
-        arguments: "--build-cache assemble"
-    - name: "Put elements in cache"
-      uses: actions/cache@v2
-      with:
-        path: |
-          build
-          .gradle
-        key: "${{ github.run_id }}"
-  test:
-    needs: "build"
-    runs-on: "ubuntu-latest"
-    steps:
-    - name: "Checkout repository"
-      uses: "actions/checkout@v2"
-    - name: "Restore cache"
-      uses: actions/cache@v2
-      with:
-        path: |
-          build
-          .gradle
-        key: "${{ github.run_id }}"
-    - name: "Set up JDK"
-      uses: "actions/setup-java@v1"
-      with:
-        java-version: 14
-    - name: "Gradle check"
-      uses: "eskatos/gradle-command-action@v1"
-      with:
-        gradle-version: "6.5"
-        arguments: "check"
-
-  release:
-    needs: "test"
-    if: contains('refs/heads/master refs/heads/5.x refs/heads/6.x', github.ref)
-    runs-on: "ubuntu-latest"
-    steps:
-    - name: "Checkout repository"
-      uses: "actions/checkout@v2"
-    - name: "Restore cache"
-      uses: actions/cache@v2
-      with:
-        path: |
-          build
-          .gradle
-        key: "${{ github.run_id }}"
-    - name: "Set up JDK"
-      uses: "actions/setup-java@v1"
-      with:
-        java-version: 14
-    - name: "Gradle release"
-      uses: "eskatos/gradle-command-action@v1"
-      with:
-        gradle-version: "6.5"
-        arguments: "release"
+      - name: "Checkout repository"
+        uses: "actions/checkout@v2"
+      - name: "Set up JDK"
+        uses: "actions/setup-java@v1"
+        with:
+          java-version: 14
+      - name: "Gradle build"
+        uses: "eskatos/gradle-command-action@v1"
+        with:
+          gradle-version: "6.5"
+          arguments: "--build-cache assemble"
+      - name: "Gradle check"
+        uses: "eskatos/gradle-command-action@v1"
+        with:
+          gradle-version: "6.5"
+          arguments: "check"
+      - name: "Gradle release"
+        if: contains('refs/heads/master refs/heads/5.x refs/heads/6.x', github.ref)
+        uses: "eskatos/gradle-command-action@v1"
+        with:
+          gradle-version: "6.5"
+          arguments: "release"
