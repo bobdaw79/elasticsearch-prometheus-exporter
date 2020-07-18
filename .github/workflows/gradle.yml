@@ -58,7 +58,7 @@ jobs:
 
   release:
     needs: "test"
-    if: "github.ref == 'refs/heads/master'"
+    if: contains('refs/heads/master refs/heads/5.x refs/heads/6.x', github.ref)
     runs-on: "ubuntu-latest"
     steps:
     - name: "Checkout repository"
