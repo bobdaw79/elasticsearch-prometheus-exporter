@@ -44,7 +44,9 @@ jobs:
           build
           .gradle
         key: "${{ github.run_id }}"
-    - name: "Set up JDK"
+    - name: "test"
+      run: "ls -al"
+   - name: "Set up JDK"
       uses: "actions/setup-java@v1"
       with:
         java-version: 14
